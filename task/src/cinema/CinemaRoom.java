@@ -14,6 +14,8 @@ public class CinemaRoom {
         this.totalRows = totalRows;
         this.totalColumns = totalColumns;
         availableSeats = new ArrayList<>();
+
+        // populate the list of seats
         for (int i = 1; i <= totalRows; i++) {
             for (int j = 1; j <= totalColumns; j++) {
                 availableSeats.add(Map.of("row", i, "column", j));
