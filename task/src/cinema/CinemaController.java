@@ -20,7 +20,7 @@ public class CinemaController {
     @ResponseBody
     public ResponseEntity<?> bookSeats(@RequestBody Seat seat) {
 
-        if (seat.getRow() > 9 || seat.getColumn() > 9) {
+        if (seat.getRow() > 9 || seat.getColumn() > 9 || seat.getRow() < 1 || seat.getColumn() < 1) {
             return new ResponseEntity<>(Map.of("error", "The number of a row or a column is out of bounds!"), HttpStatus.BAD_REQUEST);
         } else {
             for (Seat seats : cinemaRoom.getAvailableSeats()) {
