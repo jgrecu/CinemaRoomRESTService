@@ -58,4 +58,10 @@ public class CinemaController {
         }
         return new ResponseEntity<>(Map.of("error", "Wrong token!"), HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/stats")
+    @ResponseBody
+    public ResponseEntity<?> getStats(@RequestParam(value = "password", required = false) String password) {
+        return new ResponseEntity<>(Map.of("error", "The password is wrong!"), HttpStatus.UNAUTHORIZED);
+    }
 }
