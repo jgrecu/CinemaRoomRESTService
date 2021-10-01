@@ -62,6 +62,16 @@ public class CinemaController {
     @PostMapping("/stats")
     @ResponseBody
     public ResponseEntity<?> getStats(@RequestParam(value = "password", required = false) String password) {
+
+        if ("super_secret".equals(password)) {
+            int availableSeats = 81 - reservedSeats.size();
+            int income = 0;
+            for (ReservedSeat reservedSeat : reservedSeats) {
+                income += reservedSeat.getTicket().getPrice();
+            }
+
+            return new ResponseEntity<>(Map.of("current_income", income, "number_of_available_seats", availableSeats, "number_of_purchased_tickets", reservedSeats.size()), HttpStatus.OK);
+        }
         return new ResponseEntity<>(Map.of("error", "The password is wrong!"), HttpStatus.UNAUTHORIZED);
     }
 }
