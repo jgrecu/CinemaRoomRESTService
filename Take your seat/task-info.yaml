@@ -217,6 +217,160 @@ files:
         };
     }
   learner_created: false
+- name: src/cinema/Seat.java
+  visible: true
+  text: |
+    package cinema;
+
+    public class Seat {
+        private int row;
+        private int column;
+
+        public Seat() {
+        }
+
+        public Seat(int row, int column) {
+            this.row = row;
+            this.column = column;
+        }
+
+        public int getRow() {
+            return row;
+        }
+
+        public void setRow(int row) {
+            this.row = row;
+        }
+
+        public int getColumn() {
+            return column;
+        }
+
+        public void setColumn(int column) {
+            this.column = column;
+        }
+    }
+  learner_created: true
+- name: src/cinema/CinemaRoom.java
+  visible: true
+  text: |
+    package cinema;
+
+    import java.util.ArrayList;
+    import java.util.List;
+    import java.util.Map;
+
+    public class CinemaRoom {
+
+        private int totalRows;
+        private int totalColumns;
+        private List<Map<String, Integer>> availableSeats;
+
+        public CinemaRoom(int totalRows, int totalColumns) {
+            this.totalRows = totalRows;
+            this.totalColumns = totalColumns;
+            availableSeats = new ArrayList<>();
+
+            // populate the list of seats
+            for (int i = 1; i <= totalRows; i++) {
+                for (int j = 1; j <= totalColumns; j++) {
+                    availableSeats.add(Map.of("row", i, "column", j, "price", i <= 4 ? 10 : 8));
+                }
+            }
+        }
+
+        public int getTotalRows() {
+            return totalRows;
+        }
+
+        public void setTotalRows(int totalRows) {
+            this.totalRows = totalRows;
+        }
+
+        public int getTotalColumns() {
+            return totalColumns;
+        }
+
+        public void setTotalColumns(int totalColumns) {
+            this.totalColumns = totalColumns;
+        }
+
+        public List<Map<String, Integer>> getAvailableSeats() {
+            return availableSeats;
+        }
+
+        public void setAvailableSeats(List<Map<String, Integer>> availableSeats) {
+            this.availableSeats = availableSeats;
+        }
+    }
+  learner_created: true
+- name: src/cinema/CinemaController.java
+  visible: true
+  text: |
+    package cinema;
+
+    import org.springframework.http.HttpStatus;
+    import org.springframework.web.bind.annotation.*;
+    import org.springframework.web.server.ResponseStatusException;
+
+    @RestController
+    public class CinemaController {
+
+        private CinemaRoom cinemaRoom = new CinemaRoom(9, 9);
+
+        @GetMapping("/seats")
+        public CinemaRoom getSeats() {
+            return cinemaRoom;
+        }
+
+        @PostMapping("/reserve")
+        public Seat bookSeats(@RequestBody Seat seat) {
+
+            if (seat.getRow() > 9 || seat.getColumn() > 9) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid seat");
+            }
+            return seat;
+        }
+    }
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/189/stages/946/implement#comment
-status: Unchecked
+status: Failed
+feedback:
+  message: |-
+    Wrong answer in test #5
+
+    The JSON object at key error should equal to &quot;The number of a row or a column is out of bounds!&quot;, found &quot;The ticket has been already purchased!&quot;
+
+    Full JSON:
+    {
+      &quot;error&quot;: &quot;The ticket has been already purchased!&quot;
+    }
+
+    Please find below the output of your program during this failed test.
+
+    ---
+
+    .   ____          _            __ _ _
+     /\\ / ___&#39;_ __ _ _(_)_ __  __ _ \ \ \ \
+    ( ( )\___ | &#39;_ | &#39;_| | &#39;_ \/ _` | \ \ \ \
+     \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+      &#39;  |____| .__|_| |_|_| |_\__, | / / / /
+     =========|_|==============|___/=/_/_/_/
+     :: Spring Boot ::        (v2.3.1.RELEASE)
+
+    2021-09-30 17:25:21.552  INFO 34474 --- [    Test worker] cinema.Main                              : Starting Main on MacBookProVDQ with PID 34474 (started by i337469 in /Users/i337469/IdeaProjects/JetBrains Academy/Cinema Room REST Service/Cinema Room REST Service/task)
+    2021-09-30 17:25:21.555  INFO 34474 --- [    Test worker] cinema.Main                              : No active profile set, falling back to default profiles: default
+    2021-09-30 17:25:22.804  INFO 34474 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 28852 (http)
+    2021-09-30 17:25:22.815  INFO 34474 --- [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+    2021-09-30 17:25:22.816  INFO 34474 --- [    Test worker] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.36]
+    2021-09-30 17:25:22.903  INFO 34474 --- [    Test worker] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+    2021-09-30 17:25:22.904  INFO 34474 --- [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1304 ms
+    2021-09-30 17:25:23.160  INFO 34474 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService &#39;applicationTaskExecutor&#39;
+    2021-09-30 17:25:23.385  INFO 34474 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 14 endpoint(s) beneath base path &#39;/actuator&#39;
+    2021-09-30 17:25:23.426  INFO 34474 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 28852 (http) with context path &#39;&#39;
+    2021-09-30 17:25:23.438  INFO 34474 --- [    Test worker] cinema.Main                              : Started Main in 2.255 seconds (JVM running for 2.958)
+    2021-09-30 17:25:23.781  INFO 34474 --- [io-28852-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet &#39;dispatcherServlet&#39;
+    2021-09-30 17:25:23.783  INFO 34474 --- [io-28852-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet &#39;dispatcherServlet&#39;
+    2021-09-30 17:25:23.790  INFO 34474 --- [io-28852-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 7 ms
+  time: Thu, 30 Sep 2021 16:25:24 UTC
 record: -1

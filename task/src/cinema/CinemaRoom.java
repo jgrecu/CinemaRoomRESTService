@@ -2,13 +2,12 @@ package cinema;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class CinemaRoom {
 
     private int totalRows;
     private int totalColumns;
-    private List<Map<String, Integer>> availableSeats;
+    private List<Seat> availableSeats;
 
     public CinemaRoom(int totalRows, int totalColumns) {
         this.totalRows = totalRows;
@@ -18,7 +17,7 @@ public class CinemaRoom {
         // populate the list of seats
         for (int i = 1; i <= totalRows; i++) {
             for (int j = 1; j <= totalColumns; j++) {
-                availableSeats.add(Map.of("row", i, "column", j, "price", i <= 4 ? 10 : 8));
+                availableSeats.add(new Seat(i, j, i <= 4 ? 10 : 8));
             }
         }
     }
@@ -39,11 +38,11 @@ public class CinemaRoom {
         this.totalColumns = totalColumns;
     }
 
-    public List<Map<String, Integer>> getAvailableSeats() {
+    public List<Seat> getAvailableSeats() {
         return availableSeats;
     }
 
-    public void setAvailableSeats(List<Map<String, Integer>> availableSeats) {
+    public void setAvailableSeats(List<Seat> availableSeats) {
         this.availableSeats = availableSeats;
     }
 }
