@@ -21,7 +21,6 @@ public class CinemaController {
     }
 
     @PostMapping("/purchase")
-    @ResponseBody
     public ResponseEntity<?> bookSeats(@RequestBody Seat seat) {
 
         if (seat.getRow() > 9 || seat.getColumn() > 9 || seat.getRow() < 1 || seat.getColumn() < 1) {
@@ -43,9 +42,9 @@ public class CinemaController {
     }
 
     @PostMapping("/return")
-    @ResponseBody
     public ResponseEntity<?> returnTicket(@RequestBody Map<String, String> tokenBody) {
         String token = tokenBody.get("token");
+        //Seat ticket1 = reservedSeats.stream().filter(seat -> token.equals(seat.getToken())).findAny().getTicket().orElse(null);
         Seat ticket = new Seat(1,1,1);
         if (reservedSeats.stream().anyMatch(o -> o.getToken().equals(token))) {
             for (ReservedSeat reservedSeat : reservedSeats) {
@@ -60,7 +59,6 @@ public class CinemaController {
     }
 
     @PostMapping("/stats")
-    @ResponseBody
     public ResponseEntity<?> getStats(@RequestParam(value = "password", required = false) String password) {
 
         if ("super_secret".equals(password)) {
