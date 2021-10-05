@@ -44,7 +44,7 @@ public class CinemaController {
     @PostMapping("/return")
     public ResponseEntity<?> returnTicket(@RequestBody Map<String, String> tokenBody) {
         String token = tokenBody.get("token");
-        //Seat ticket1 = reservedSeats.stream().filter(seat -> token.equals(seat.getToken())).findAny().getTicket().orElse(null);
+        Seat ticket1 = reservedSeats.stream().filter(seat -> token.equals(seat.getToken())).findAny().getTicket().orElse(null);
         Seat ticket = new Seat(1,1,1);
         if (reservedSeats.stream().anyMatch(o -> o.getToken().equals(token))) {
             for (ReservedSeat reservedSeat : reservedSeats) {
