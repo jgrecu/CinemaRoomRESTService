@@ -28,15 +28,13 @@ public class CinemaController {
                     HttpStatus.BAD_REQUEST);
         } else {
             for (Seat seats : cinemaRoom.getAvailableSeats()) {
-                if (seat.getRow() == seats.getRow() && seat.getColumn() == seats.getColumn()) {
-                    if (!reservedSeats.stream().anyMatch(o -> o.getTicket().equals(seats))) {
-                        ReservedSeat reservedSeat = new ReservedSeat(UUID.randomUUID().toString(), seats);
-                        reservedSeats.add(reservedSeat);
-                        return new ResponseEntity<>(reservedSeat, HttpStatus.OK);
-                    }
+                if (seat.equals(seats) && reservedSeats.stream().noneMatch(o -> o.getTicket().equals(seats))) {
+                    ReservedSeat reservedSeat = new ReservedSeat(UUID.randomUUID().toString(), seats);
+                    reservedSeats.add(reservedSeat);
+                    return new ResponseEntity<>(reservedSeat, HttpStatus.OK);
                 }
             }
-            return new ResponseEntity<>(Map.of("error","The ticket has been already purchased!"),
+            return new ResponseEntity<>(Map.of("error", "The ticket has been already purchased!"),
                     HttpStatus.BAD_REQUEST);
         }
     }
@@ -44,18 +42,15 @@ public class CinemaController {
     @PostMapping("/return")
     public ResponseEntity<?> returnTicket(@RequestBody Map<String, String> tokenBody) {
         String token = tokenBody.get("token");
-        Seat ticket1 = reservedSeats.stream().filter(seat -> token.equals(seat.getToken())).findAny().getTicket().orElse(null);
-        Seat ticket = new Seat(1,1,1);
-        if (reservedSeats.stream().anyMatch(o -> o.getToken().equals(token))) {
-            for (ReservedSeat reservedSeat : reservedSeats) {
-                if (reservedSeat.getToken().equals(token)) {
-                    ticket = reservedSeat.getTicket();
-                }
-            }
+        Seat ticket = reservedSeats.stream().filter(seat -> token.equals(seat.getToken())).map(ReservedSeat::getTicket)
+                .findAny().orElse(null);
+
+        if (ticket != null) {
             reservedSeats.removeIf(reservedSeat -> reservedSeat.getToken().equals(token));
             return new ResponseEntity<>(Map.of("returned_ticket", ticket), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(Map.of("error", "Wrong token!"), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(Map.of("error", "Wrong token!"), HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/stats")
@@ -68,7 +63,8 @@ public class CinemaController {
                 income += reservedSeat.getTicket().getPrice();
             }
 
-            return new ResponseEntity<>(Map.of("current_income", income, "number_of_available_seats", availableSeats, "number_of_purchased_tickets", reservedSeats.size()), HttpStatus.OK);
+            return new ResponseEntity<>(Map.of("current_income", income, "number_of_available_seats", availableSeats,
+                    "number_of_purchased_tickets", reservedSeats.size()), HttpStatus.OK);
         }
         return new ResponseEntity<>(Map.of("error", "The password is wrong!"), HttpStatus.UNAUTHORIZED);
     }
