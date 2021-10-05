@@ -12,6 +12,7 @@ import java.util.UUID;
 @RestController
 public class CinemaController {
 
+    private static final String ERROR = "error";
     private CinemaRoom cinemaRoom = new CinemaRoom(9, 9);
     private List<ReservedSeat> reservedSeats = new ArrayList<>();
 
@@ -24,7 +25,7 @@ public class CinemaController {
     public ResponseEntity<?> bookSeats(@RequestBody Seat seat) {
 
         if (seat.getRow() > 9 || seat.getColumn() > 9 || seat.getRow() < 1 || seat.getColumn() < 1) {
-            return new ResponseEntity<>(Map.of("error", "The number of a row or a column is out of bounds!"),
+            return new ResponseEntity<>(Map.of(ERROR, "The number of a row or a column is out of bounds!"),
                     HttpStatus.BAD_REQUEST);
         } else {
             for (Seat seats : cinemaRoom.getAvailableSeats()) {
@@ -34,7 +35,7 @@ public class CinemaController {
                     return new ResponseEntity<>(reservedSeat, HttpStatus.OK);
                 }
             }
-            return new ResponseEntity<>(Map.of("error", "The ticket has been already purchased!"),
+            return new ResponseEntity<>(Map.of(ERROR, "The ticket has been already purchased!"),
                     HttpStatus.BAD_REQUEST);
         }
     }
@@ -49,7 +50,7 @@ public class CinemaController {
             reservedSeats.removeIf(reservedSeat -> reservedSeat.getToken().equals(token));
             return new ResponseEntity<>(Map.of("returned_ticket", ticket), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(Map.of("error", "Wrong token!"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of(ERROR, "Wrong token!"), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -66,6 +67,6 @@ public class CinemaController {
             return new ResponseEntity<>(Map.of("current_income", income, "number_of_available_seats", availableSeats,
                     "number_of_purchased_tickets", reservedSeats.size()), HttpStatus.OK);
         }
-        return new ResponseEntity<>(Map.of("error", "The password is wrong!"), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(Map.of(ERROR, "The password is wrong!"), HttpStatus.UNAUTHORIZED);
     }
 }
