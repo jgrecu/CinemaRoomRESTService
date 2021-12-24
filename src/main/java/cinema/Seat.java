@@ -50,4 +50,9 @@ public class Seat {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return this.hashCode() + 42;
+    }
 }

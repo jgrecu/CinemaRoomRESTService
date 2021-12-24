@@ -4,8 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -13,41 +11,40 @@ import java.util.UUID;
 public class CinemaController {
 
     private static final String ERROR = "error";
-    private CinemaRoom cinemaRoom = new CinemaRoom(9, 9);
-    private List<ReservedSeat> reservedSeats = new ArrayList<>();
+    private CinemaRoomService cinemaRoomService;
+
+    public CinemaController(CinemaRoomService cinemaRoomService) {
+        this.cinemaRoomService = cinemaRoomService;
+    }
 
     @GetMapping("/seats")
     public CinemaRoom getSeats() {
-        return cinemaRoom;
+        return cinemaRoomService.getCinemaRoom();
     }
 
     @PostMapping("/purchase")
     public ResponseEntity<?> bookSeats(@RequestBody Seat seat) {
 
-        if (seat.getRow() > 9 || seat.getColumn() > 9 || seat.getRow() < 1 || seat.getColumn() < 1) {
-            return new ResponseEntity<>(Map.of(ERROR, "The number of a row or a column is out of bounds!"),
-                    HttpStatus.BAD_REQUEST);
-        } else {
-            for (Seat seats : cinemaRoom.getAvailableSeats()) {
-                if (seat.equals(seats) && reservedSeats.stream().noneMatch(o -> o.getTicket().equals(seats))) {
-                    ReservedSeat reservedSeat = new ReservedSeat(UUID.randomUUID().toString(), seats);
-                    reservedSeats.add(reservedSeat);
-                    return new ResponseEntity<>(reservedSeat, HttpStatus.OK);
-                }
+        try {
+            ReservedSeat reservedSeat = cinemaRoomService.bookSeat(seat);
+            if (reservedSeat != null) {
+                return new ResponseEntity<>(reservedSeat, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(Map.of(ERROR, "The ticket has been already purchased!"),
+                        HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>(Map.of(ERROR, "The ticket has been already purchased!"),
-                    HttpStatus.BAD_REQUEST);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(Map.of(ERROR, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/return")
     public ResponseEntity<?> returnTicket(@RequestBody Map<String, String> tokenBody) {
         String token = tokenBody.get("token");
-        Seat ticket = reservedSeats.stream().filter(seat -> token.equals(seat.getToken())).map(ReservedSeat::getTicket)
-                .findAny().orElse(null);
+
+        ReservedSeat ticket = cinemaRoomService.returnTicket(token);
 
         if (ticket != null) {
-            reservedSeats.removeIf(reservedSeat -> reservedSeat.getToken().equals(token));
             return new ResponseEntity<>(Map.of("returned_ticket", ticket), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(Map.of(ERROR, "Wrong token!"), HttpStatus.BAD_REQUEST);
@@ -58,14 +55,8 @@ public class CinemaController {
     public ResponseEntity<?> getStats(@RequestParam(value = "password", required = false) String password) {
 
         if ("super_secret".equals(password)) {
-            int availableSeats = 81 - reservedSeats.size();
-            int income = 0;
-            for (ReservedSeat reservedSeat : reservedSeats) {
-                income += reservedSeat.getTicket().getPrice();
-            }
-
-            return new ResponseEntity<>(Map.of("current_income", income, "number_of_available_seats", availableSeats,
-                    "number_of_purchased_tickets", reservedSeats.size()), HttpStatus.OK);
+            Map<String, Integer> stats = cinemaRoomService.getStats();
+            return new ResponseEntity<>(stats, HttpStatus.OK);
         }
         return new ResponseEntity<>(Map.of(ERROR, "The password is wrong!"), HttpStatus.UNAUTHORIZED);
     }
