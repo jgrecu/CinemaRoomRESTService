@@ -50,4 +50,13 @@ public class Seat {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "Seat{" +
+                "row=" + row +
+                ", column=" + column +
+                ", price=" + price +
+                '}';
+    }
 }
