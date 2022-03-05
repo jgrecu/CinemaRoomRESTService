@@ -1,5 +1,11 @@
-package cinema;
+package cinema.controller;
 
+import cinema.model.CinemaStatistics;
+import cinema.model.ErrorResponse;
+import cinema.model.CinemaRoom;
+import cinema.model.ReservedSeat;
+import cinema.model.Seat;
+import cinema.service.CinemaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

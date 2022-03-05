@@ -1,11 +1,13 @@
-package cinema;
+package cinema.service;
 
+import cinema.repository.CinemaRepositoryImpl;
+import cinema.model.CinemaRoom;
+import cinema.model.CinemaStatistics;
 import cinema.exception.SeatOutOfBoundsException;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import cinema.model.ReservedSeat;
+import cinema.model.Seat;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 

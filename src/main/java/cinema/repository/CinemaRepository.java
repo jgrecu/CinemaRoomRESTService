@@ -1,7 +1,10 @@
-package cinema;
+package cinema.repository;
+
+import cinema.model.CinemaRoom;
+import cinema.model.ReservedSeat;
+import cinema.model.Seat;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface CinemaRepository {

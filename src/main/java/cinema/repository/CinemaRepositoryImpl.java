@@ -1,5 +1,8 @@
-package cinema;
+package cinema.repository;
 
+import cinema.model.CinemaRoom;
+import cinema.model.ReservedSeat;
+import cinema.model.Seat;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
