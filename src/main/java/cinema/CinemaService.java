@@ -1,5 +1,6 @@
 package cinema;
 
+import cinema.exception.SeatOutOfBoundsException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,11 @@ public class CinemaService {
     }
 
     public Optional<ReservedSeat> bookSeat(Seat seat) {
+        if (seat.getRow() < 1 || seat.getColumn() < 1 || seat.getColumn() > 9 || seat.getRow() > 9) {
+//            return ResponseEntity.badRequest()
+//                    .body(Map.of(ERROR, "The number of a row or a column is out of bounds!"));
+            throw new SeatOutOfBoundsException();
+        }
         Optional<Seat> optionalSeat = cinemaRepository.findSeatBy(seat);
         if (optionalSeat.isPresent()) {
             Optional<ReservedSeat> reservedSeatOptional = cinemaRepository.findAllReservedSeats().stream()

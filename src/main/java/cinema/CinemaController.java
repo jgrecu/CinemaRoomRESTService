@@ -25,10 +25,6 @@ public class CinemaController {
 
     @PostMapping("/purchase")
     public ResponseEntity<?> bookSeats(@RequestBody Seat seat) {
-        if (seat.getRow() < 1 || seat.getColumn() < 1 || seat.getColumn() > 9 || seat.getRow() > 9) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of(ERROR, "The number of a row or a column is out of bounds!"));
-        }
 
         Optional<ReservedSeat> optionalReservedSeat = cinemaService.bookSeat(seat);
 
@@ -36,8 +32,7 @@ public class CinemaController {
             return ResponseEntity.ok().body(optionalReservedSeat.get());
         }
         return ResponseEntity.badRequest()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Map.of(ERROR, "The ticket has been already purchased!"));
+                .body(new ErrorResponse("The ticket has been already purchased!"));
     }
 
     @PostMapping("/return")
@@ -52,8 +47,7 @@ public class CinemaController {
                     .body(Map.of("returned_ticket", optionalReservedSeat.get().getTicket()));
         } else {
             return ResponseEntity.badRequest()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(Map.of(ERROR, "Wrong token!"));
+                    .body(new ErrorResponse("Wrong token!"));
         }
     }
 
@@ -69,6 +63,6 @@ public class CinemaController {
                     "number_of_available_seats", cinemaStatistics.getAvailableSeats(),
                     "number_of_purchased_tickets", cinemaStatistics.getReservedSeats()));
         }
-        return new ResponseEntity<>(Map.of(ERROR, "The password is wrong!"), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ErrorResponse("The password is wrong!"), HttpStatus.UNAUTHORIZED);
     }
 }
