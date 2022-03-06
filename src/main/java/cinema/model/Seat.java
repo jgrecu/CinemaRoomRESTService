@@ -1,5 +1,7 @@
 package cinema.model;
 
+import java.util.Objects;
+
 public class Seat {
     private int row;
     private int column;
@@ -52,16 +54,16 @@ public class Seat {
     }
 
     @Override
-<<<<<<< HEAD:src/main/java/cinema/model/Seat.java
     public String toString() {
         return "Seat{" +
                 "row=" + row +
                 ", column=" + column +
                 ", price=" + price +
                 '}';
-=======
+    }
+
+    @Override
     public int hashCode() {
-        return this.hashCode() + 42;
->>>>>>> main:src/main/java/cinema/Seat.java
+        return Objects.hashCode(this) + 42;
     }
 }

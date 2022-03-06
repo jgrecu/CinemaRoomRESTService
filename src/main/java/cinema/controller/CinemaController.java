@@ -65,9 +65,7 @@ public class CinemaController {
 
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(Map.of("current_income", cinemaStatistics.getIncome(),
-                    "number_of_available_seats", cinemaStatistics.getAvailableSeats(),
-                    "number_of_purchased_tickets", cinemaStatistics.getReservedSeats()));
+                    .body(cinemaStatistics);
         }
         return new ResponseEntity<>(new ErrorResponse("The password is wrong!"), HttpStatus.UNAUTHORIZED);
     }

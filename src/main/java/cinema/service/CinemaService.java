@@ -59,6 +59,6 @@ public class CinemaService {
                 .mapToInt(resSeat -> resSeat.getTicket().getPrice())
                 .sum();
         int numReservedSeats = cinemaRepository.findAllReservedSeats().size();
-        return new CinemaStatistics(availableSeats,income, numReservedSeats);
+        return new CinemaStatistics(availableSeats, income, numReservedSeats);
     }
 }

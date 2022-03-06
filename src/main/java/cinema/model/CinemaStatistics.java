@@ -1,37 +1,37 @@
 package cinema.model;
 
 public class CinemaStatistics {
-    private int availableSeats;
-    private int income;
-    private int reservedSeats;
+    private int numberOfAvailableSeats;
+    private int currentIncome;
+    private int numberOfPurchasedTickets;
 
-    public int getReservedSeats() {
-        return reservedSeats;
+    public int getNumberOfPurchasedTickets() {
+        return numberOfPurchasedTickets;
     }
 
-    public void setReservedSeats(int reservedSeats) {
-        this.reservedSeats = reservedSeats;
+    public void setNumberOfPurchasedTickets(int numberOfPurchasedTickets) {
+        this.numberOfPurchasedTickets = numberOfPurchasedTickets;
     }
 
-    public CinemaStatistics(int availableSeats, int income, int reservedSeats) {
-        this.availableSeats = availableSeats;
-        this.income = income;
-        this.reservedSeats = reservedSeats;
+    public CinemaStatistics(int numberOfAvailableSeats, int income, int numberOfPurchasedTickets) {
+        this.numberOfAvailableSeats = numberOfAvailableSeats;
+        this.currentIncome = income;
+        this.numberOfPurchasedTickets = numberOfPurchasedTickets;
     }
 
-    public int getAvailableSeats() {
-        return availableSeats;
+    public int getNumberOfAvailableSeats() {
+        return numberOfAvailableSeats;
     }
 
-    public void setAvailableSeats(int availableSeats) {
-        this.availableSeats = availableSeats;
+    public void setNumberOfAvailableSeats(int numberOfAvailableSeats) {
+        this.numberOfAvailableSeats = numberOfAvailableSeats;
     }
 
-    public int getIncome() {
-        return income;
+    public int getCurrentIncome() {
+        return currentIncome;
     }
 
-    public void setIncome(int income) {
-        this.income = income;
+    public void setCurrentIncome(int currentIncome) {
+        this.currentIncome = currentIncome;
     }
 }
