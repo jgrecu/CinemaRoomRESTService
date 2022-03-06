@@ -52,11 +52,16 @@ public class Seat {
     }
 
     @Override
+<<<<<<< HEAD:src/main/java/cinema/model/Seat.java
     public String toString() {
         return "Seat{" +
                 "row=" + row +
                 ", column=" + column +
                 ", price=" + price +
                 '}';
+=======
+    public int hashCode() {
+        return this.hashCode() + 42;
+>>>>>>> main:src/main/java/cinema/Seat.java
     }
 }
