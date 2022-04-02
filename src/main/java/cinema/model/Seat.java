@@ -6,6 +6,7 @@ public class Seat {
     private int row;
     private int column;
     private int price;
+    private String token;
 
     public Seat() {
     }
@@ -38,6 +39,14 @@ public class Seat {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override
