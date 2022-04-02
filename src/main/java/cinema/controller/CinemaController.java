@@ -3,7 +3,6 @@ package cinema.controller;
 import cinema.model.CinemaStatistics;
 import cinema.model.ErrorResponse;
 import cinema.model.CinemaRoom;
-import cinema.model.ReservedSeat;
 import cinema.model.Seat;
 import cinema.service.CinemaService;
 import org.springframework.http.HttpStatus;
@@ -32,7 +31,7 @@ public class CinemaController {
     @PostMapping("/purchase")
     public ResponseEntity<?> bookSeats(@RequestBody Seat seat) {
 
-        Optional<ReservedSeat> optionalReservedSeat = cinemaService.bookSeat(seat);
+        Optional<Seat> optionalReservedSeat = cinemaService.bookSeat(seat);
 
         if (optionalReservedSeat.isPresent()) {
             return ResponseEntity.ok().body(optionalReservedSeat.get());
@@ -45,12 +44,12 @@ public class CinemaController {
     public ResponseEntity<?> returnTicket(@RequestBody Map<String, String> tokenBody) {
         String token = tokenBody.get("token");
 
-        Optional<ReservedSeat> optionalReservedSeat = cinemaService.returnTicket(token);
+        Optional<Seat> optionalReservedSeat = cinemaService.returnTicket(token);
 
         if (optionalReservedSeat.isPresent()) {
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(Map.of("returned_ticket", optionalReservedSeat.get().getTicket()));
+                    .body(Map.of("returned_ticket", optionalReservedSeat.get()));
         } else {
             return ResponseEntity.badRequest()
                     .body(new ErrorResponse("Wrong token!"));

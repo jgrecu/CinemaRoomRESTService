@@ -1,50 +1,57 @@
 package cinema.repository;
 
 import cinema.model.CinemaRoom;
-import cinema.model.ReservedSeat;
 import cinema.model.Seat;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class CinemaRepositoryImpl implements CinemaRepository {
 
-    private List<ReservedSeat> reservedSeats = new ArrayList<>();
-    private CinemaRoom cinemaRoom = new CinemaRoom(9, 9);
+    private final int totalRows = 9;
+    private final int totalColumns = 9;
+    private final List<Seat> cinemaRoom = createSeatsList(totalRows, totalColumns);
 
 
     @Override
-    public List<ReservedSeat> findAllReservedSeats() {
-        return new ArrayList<>(reservedSeats);
+    public List<Seat> findAllReservedSeats() {
+        return cinemaRoom.stream()
+                .filter(seat -> seat.getToken() != null)
+                .collect(Collectors.toList());
     }
 
     @Override
     public CinemaRoom findAllSeats() {
-        return cinemaRoom;
+        return new CinemaRoom(totalRows, totalColumns, cinemaRoom);
     }
 
     @Override
-    public Optional<Seat> findSeatBy(Seat seat) {
-        return cinemaRoom.getAvailableSeats().stream().filter(seat::equals).findAny();
+    public Optional<Seat> findSeat(Seat seat) {
+        return cinemaRoom.stream()
+                .filter(seat::equals)
+                .findAny();
     }
 
     @Override
-    public void bookSeat(ReservedSeat reservedSeat) {
-        reservedSeats.add(reservedSeat);
+    public Optional<Seat> findSeatByToken(String token) {
+        return cinemaRoom.stream()
+                .filter(seat -> seat.getToken().equals(token))
+                .findAny();
     }
 
-    @Override
-    public void unBookSeat(ReservedSeat reservedSeat) {
-        reservedSeats.removeIf(resSeat -> resSeat.equals(reservedSeat));
-    }
+    private List<Seat> createSeatsList(int totalRows, int totalColumns) {
+        final List<Seat> tempList = new ArrayList<>();
+        // populate the list of seats
+        for (int i = 1; i <= totalRows; i++) {
+            for (int j = 1; j <= totalColumns; j++) {
+                tempList.add(new Seat(i, j, i <= 4 ? 10 : 8));
+            }
+        }
 
-    @Override
-    public Optional<ReservedSeat> findBookedSeatByToken(String token) {
-        return reservedSeats.stream()
-                .filter(reservedSeat -> reservedSeat.getToken().equals(token))
-                .findFirst();
+        return tempList;
     }
 }
