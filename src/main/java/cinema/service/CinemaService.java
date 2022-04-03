@@ -1,5 +1,9 @@
 package cinema.service;
 
+import cinema.dtos.BookedSeatDTO;
+import cinema.dtos.CinemaRoomDTO;
+import cinema.dtos.ReturnedTicketDTO;
+import cinema.dtos.SeatDTO;
 import cinema.repository.CinemaRepositoryImpl;
 import cinema.model.CinemaRoom;
 import cinema.model.CinemaStatistics;
@@ -7,8 +11,10 @@ import cinema.exception.SeatOutOfBoundsException;
 import cinema.model.Seat;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CinemaService {
@@ -20,11 +26,20 @@ public class CinemaService {
     }
 
 
-    public CinemaRoom getCinemaRoom() {
-        return cinemaRepository.findAllSeats();
+    public CinemaRoomDTO getCinemaRoom() {
+        CinemaRoom cinemaRoom = cinemaRepository.findAllSeats();
+        int totalColumns = cinemaRoom.getTotalColumns();
+        int totalRows = cinemaRoom.getTotalRows();
+        List<SeatDTO> seatDTOS = cinemaRoom.getAvailableSeats().stream().map(
+                        seat -> new SeatDTO(
+                                seat.getRow(),
+                                seat.getColumn(),
+                                seat.getPrice()))
+                .collect(Collectors.toList());
+        return new CinemaRoomDTO(totalRows, totalColumns, seatDTOS);
     }
 
-    public Optional<Seat> bookSeat(Seat seat) {
+    public Optional<BookedSeatDTO> bookSeat(Seat seat) {
 //        if (seat.getRow() < 1 || seat.getColumn() < 1 || seat.getColumn() > 9 || seat.getRow() > 9) {
 //            throw new SeatOutOfBoundsException();
 //        }
@@ -33,7 +48,9 @@ public class CinemaService {
             Seat tempSeat = optionalSeat.get();
             if (tempSeat.getToken() == null) {
                 tempSeat.setToken(UUID.randomUUID().toString());
-                return Optional.of(tempSeat);
+                SeatDTO seatDTO = new SeatDTO(tempSeat.getRow(), tempSeat.getColumn(), tempSeat.getPrice());
+                BookedSeatDTO bookedSeatDTO = new BookedSeatDTO(tempSeat.getToken(), seatDTO);
+                return Optional.of(bookedSeatDTO);
             } else {
                 return Optional.empty();
             }
@@ -42,11 +59,13 @@ public class CinemaService {
         }
     }
 
-    public Optional<Seat> returnTicket(String token) {
+    public Optional<ReturnedTicketDTO> returnTicket(String token) {
         Optional<Seat> bookedSeatByToken = cinemaRepository.findSeatByToken(token);
         if (bookedSeatByToken.isPresent()) {
             bookedSeatByToken.get().setToken(null);
-            return bookedSeatByToken;
+            Seat seat = bookedSeatByToken.get();
+            SeatDTO seatDTO = new SeatDTO(seat.getRow(), seat.getColumn(), seat.getPrice());
+            return Optional.of(new ReturnedTicketDTO(seatDTO));
         }
         return Optional.empty();
     }

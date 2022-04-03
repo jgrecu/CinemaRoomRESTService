@@ -1,5 +1,8 @@
 package cinema.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Objects;
 
 public class Seat {
@@ -63,16 +66,17 @@ public class Seat {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hashCode(this) + 42;
+    }
+
+    @Override
     public String toString() {
         return "Seat{" +
                 "row=" + row +
                 ", column=" + column +
                 ", price=" + price +
+                ", token='" + token + '\'' +
                 '}';
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(this) + 42;
     }
 }

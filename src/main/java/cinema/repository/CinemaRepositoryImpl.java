@@ -39,7 +39,7 @@ public class CinemaRepositoryImpl implements CinemaRepository {
     @Override
     public Optional<Seat> findSeatByToken(String token) {
         return cinemaRoom.stream()
-                .filter(seat -> seat.getToken().equals(token))
+                .filter(seat -> token.equals(seat.getToken()))
                 .findAny();
     }
 

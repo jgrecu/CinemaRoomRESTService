@@ -1,5 +1,8 @@
 package cinema.controller;
 
+import cinema.dtos.BookedSeatDTO;
+import cinema.dtos.CinemaRoomDTO;
+import cinema.dtos.ReturnedTicketDTO;
 import cinema.model.CinemaStatistics;
 import cinema.model.ErrorResponse;
 import cinema.model.CinemaRoom;
@@ -24,14 +27,14 @@ public class CinemaController {
     }
 
     @GetMapping("/seats")
-    public CinemaRoom getSeats() {
+    public CinemaRoomDTO getSeats() {
         return cinemaService.getCinemaRoom();
     }
 
     @PostMapping("/purchase")
     public ResponseEntity<?> bookSeats(@RequestBody Seat seat) {
 
-        Optional<Seat> optionalReservedSeat = cinemaService.bookSeat(seat);
+        Optional<BookedSeatDTO> optionalReservedSeat = cinemaService.bookSeat(seat);
 
         if (optionalReservedSeat.isPresent()) {
             return ResponseEntity.ok().body(optionalReservedSeat.get());
@@ -44,12 +47,12 @@ public class CinemaController {
     public ResponseEntity<?> returnTicket(@RequestBody Map<String, String> tokenBody) {
         String token = tokenBody.get("token");
 
-        Optional<Seat> optionalReservedSeat = cinemaService.returnTicket(token);
+        Optional<ReturnedTicketDTO> optionalReservedSeat = cinemaService.returnTicket(token);
 
         if (optionalReservedSeat.isPresent()) {
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(Map.of("returned_ticket", optionalReservedSeat.get()));
+                    .body(optionalReservedSeat.get());
         } else {
             return ResponseEntity.badRequest()
                     .body(new ErrorResponse("Wrong token!"));
