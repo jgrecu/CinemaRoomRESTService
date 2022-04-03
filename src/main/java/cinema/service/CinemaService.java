@@ -54,9 +54,9 @@ public class CinemaService {
             } else {
                 return Optional.empty();
             }
-        } else {
-            throw new SeatOutOfBoundsException();
         }
+
+        throw new SeatOutOfBoundsException();
     }
 
     public Optional<ReturnedTicketDTO> returnTicket(String token) {

@@ -5,7 +5,6 @@ import cinema.dtos.CinemaRoomDTO;
 import cinema.dtos.ReturnedTicketDTO;
 import cinema.model.CinemaStatistics;
 import cinema.model.ErrorResponse;
-import cinema.model.CinemaRoom;
 import cinema.model.Seat;
 import cinema.service.CinemaService;
 import org.springframework.http.HttpStatus;
