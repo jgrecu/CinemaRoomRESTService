@@ -40,9 +40,6 @@ public class CinemaService {
     }
 
     public Optional<BookedSeatDTO> bookSeat(Seat seat) {
-//        if (seat.getRow() < 1 || seat.getColumn() < 1 || seat.getColumn() > 9 || seat.getRow() > 9) {
-//            throw new SeatOutOfBoundsException();
-//        }
         Optional<Seat> optionalSeat = cinemaRepository.findSeat(seat);
         if (optionalSeat.isPresent()) {
             Seat tempSeat = optionalSeat.get();
@@ -55,8 +52,7 @@ public class CinemaService {
                 return Optional.empty();
             }
         }
-
-        throw new SeatOutOfBoundsException();
+        return Optional.empty();
     }
 
     public Optional<ReturnedTicketDTO> returnTicket(String token) {

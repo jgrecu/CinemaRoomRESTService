@@ -1,9 +1,15 @@
 package cinema.model;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Objects;
 
 public class Seat {
+    @Min(1)
+    @Max(9)
     private int row;
+    @Min(1)
+    @Max(9)
     private int column;
     private int price;
     private String token;

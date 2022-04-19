@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class CinemaController {
     }
 
     @PostMapping("/purchase")
-    public ResponseEntity<?> bookSeats(@RequestBody Seat seat) {
+    public ResponseEntity<?> bookSeats(@RequestBody @Valid Seat seat) {
 
         Optional<BookedSeatDTO> optionalReservedSeat = cinemaService.bookSeat(seat);
 
