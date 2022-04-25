@@ -3,6 +3,7 @@ package cinema.controller;
 import cinema.dtos.BookedSeatDTO;
 import cinema.dtos.CinemaRoomDTO;
 import cinema.dtos.ReturnedTicketDTO;
+import cinema.dtos.TockenRequest;
 import cinema.model.CinemaStatistics;
 import cinema.model.ErrorResponse;
 import cinema.model.Seat;
@@ -44,8 +45,8 @@ public class CinemaController {
     }
 
     @PostMapping("/return")
-    public ResponseEntity<?> returnTicket(@RequestBody Map<String, String> tokenBody) {
-        String token = tokenBody.get("token");
+    public ResponseEntity<?> returnTicket(@RequestBody TockenRequest tokenBody) {
+        String token = tokenBody.getToken().toString();
 
         Optional<ReturnedTicketDTO> optionalReservedSeat = cinemaService.returnTicket(token);
 
